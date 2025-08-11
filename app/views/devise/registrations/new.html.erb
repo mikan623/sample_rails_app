@@ -1,0 +1,238 @@
+<div class="x-auth-container">
+  <div class="x-auth-left">
+    <img src="/x_logo.png" alt="X logo" class="x-auth-logo" />
+  </div>
+  <div class="x-auth-right">
+    <div class="x-auth-title">すべての話題が、ここに。</div>
+    <div class="x-auth-subtitle">今すぐ参加しましょう。</div>
+    <button class="x-auth-btn-google" type="button">
+      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" style="height:1.5em;margin-right:0.5em;">Google で登録
+    </button>
+    <button class="x-auth-btn-apple" type="button">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Apple" style="height:1.5em;margin-right:0.5em;">Appleのアカウントで登録
+    </button>
+    <div class="x-auth-or">または</div>
+    <button class="x-auth-btn-main" type="button" id="open-x-modal">アカウントを作成</button>
+    <div class="x-auth-policy">
+      アカウントを登録することで、<a href="#">利用規約</a>と<a href="#">プライバシーポリシー</a>（Cookieの使用を含む）に同意したとみなされます。
+    </div>
+    <div class="x-auth-login-link">
+      アカウントをお持ちの場合<br>
+      <%= link_to 'ログイン', new_user_session_path %>
+    </div>
+  </div>
+</div>
+
+<!-- アカウント作成モーダル -->
+<div class="x-modal-overlay" id="x-modal" style="display:none;">
+  <div class="x-modal-box">
+    <button class="x-modal-close" id="close-x-modal" aria-label="閉じる">×</button>
+    <img src="/x_logo.png" alt="X logo" class="x-modal-logo" />
+    <div class="x-modal-title">アカウントを作成</div>
+    
+    <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { id: 'x-modal-form', autocomplete: 'off' }) do |f| %>
+      <%= f.error_notification %>
+      
+      <div class="x-modal-form-group">
+        <div class="x-modal-label">名前 <span class="x-modal-count" id="x-name-count">0/50</span></div>
+        <%= f.input :name, required: true, autofocus: true, 
+                    input_html: { 
+                      class: 'x-modal-input', 
+                      id: 'x-name', 
+                      maxlength: 50,
+                      placeholder: ''
+                    },
+                    label: false %>
+      </div>
+      
+      <div class="x-modal-form-group">
+        <div class="x-modal-label">電話番号</div>
+        <%= f.input :phone, required: true,
+                    input_html: { 
+                      class: 'x-modal-input', 
+                      id: 'x-phone',
+                      placeholder: '電話番号'
+                    },
+                    label: false %>
+        <div class="x-modal-email-link">
+          <a href="#" id="use-email-link">かわりにメールアドレスを登録する</a>
+        </div>
+      </div>
+      
+      <div class="x-modal-form-group" id="email-field" style="display:none;">
+        <div class="x-modal-label">メールアドレス</div>
+        <%= f.input :email, required: true,
+                    input_html: { 
+                      class: 'x-modal-input', 
+                      id: 'x-email',
+                      placeholder: 'メールアドレス'
+                    },
+                    label: false %>
+        <div class="x-modal-phone-link">
+          <a href="#" id="use-phone-link">かわりに電話番号を登録する</a>
+        </div>
+      </div>
+      
+      <!-- 生年月日フィールドをフォーム内に移動 -->
+      <%= f.hidden_field :birth_month, id: 'x-birth-month-hidden' %>
+      <%= f.hidden_field :birth_day, id: 'x-birth-day-hidden' %>
+      <%= f.hidden_field :birth_year, id: 'x-birth-year-hidden' %>
+      
+      <div class="x-modal-form-group">
+        <div class="x-modal-label">パスワード</div>
+        <%= f.input :password, required: true,
+                    hint: ("#{@minimum_password_length}文字以上" if @minimum_password_length),
+                    input_html: { 
+                      class: 'x-modal-input',
+                      autocomplete: "new-password",
+                      placeholder: 'パスワード'
+                    },
+                    label: false %>
+      </div>
+      
+      <div class="x-modal-form-group">
+        <div class="x-modal-label">パスワード（確認）</div>
+        <%= f.input :password_confirmation, required: true,
+                    input_html: { 
+                      class: 'x-modal-input',
+                      autocomplete: "new-password",
+                      placeholder: 'パスワード（確認）'
+                    },
+                    label: false %>
+      </div>
+      
+      <div class="x-modal-birth-label">生年月日</div>
+      <div class="x-modal-birth-desc">この情報は公開されません。このアカウントをビジネス、ペットなどに使う場合でも、ご自身の年齢を確認してください。</div>
+      <div class="x-modal-birth-row">
+        <select id="x-birth-month" required>
+          <option value="">月</option>
+          <% (1..12).each do |m| %>
+            <option value="<%= m %>"><%= m %></option>
+          <% end %>
+        </select>
+        <select id="x-birth-day" required>
+          <option value="">日</option>
+          <% (1..31).each do |d| %>
+            <option value="<%= d %>"><%= d %></option>
+          <% end %>
+        </select>
+        <select id="x-birth-year" required>
+          <option value="">年</option>
+          <% y = Time.current.year; (y.downto(y-120)).each do |yy| %>
+            <option value="<%= yy %>"><%= yy %></option>
+          <% end %>
+        </select>
+      </div>
+      
+      <div class="form-actions">
+        <%= f.button :submit, "次へ", class: "x-modal-next-btn", id: "x-modal-next", disabled: true %>
+      </div>
+    <% end %>
+    
+    <div class="x-auth-policy">
+      アカウントを登録することで、<a href="#">利用規約</a>と<a href="#">プライバシーポリシー</a>（Cookieの使用を含む）に同意したとみなされます。
+    </div>
+    <div class="x-auth-login-link">
+      アカウントをお持ちの場合<br>
+      <%= link_to 'ログイン', new_user_session_path %>
+    </div>
+  </div>
+</div>
+
+<script>
+// モーダル表示/非表示
+const openModalBtn = document.getElementById('open-x-modal');
+const closeModalBtn = document.getElementById('close-x-modal');
+const modal = document.getElementById('x-modal');
+openModalBtn.addEventListener('click', () => { modal.style.display = 'flex'; });
+closeModalBtn.addEventListener('click', () => { modal.style.display = 'none'; });
+window.addEventListener('click', (e) => { if(e.target === modal) modal.style.display = 'none'; });
+
+// 名前文字数カウント
+const nameInput = document.getElementById('x-name');
+const nameCount = document.getElementById('x-name-count');
+if (nameInput) {
+  nameInput.addEventListener('input', () => {
+    nameCount.textContent = `${nameInput.value.length}/50`;
+    validateModalForm();
+  });
+}
+
+// 生年月日バリデーション
+const monthSel = document.getElementById('x-birth-month');
+const daySel = document.getElementById('x-birth-day');
+const yearSel = document.getElementById('x-birth-year');
+[monthSel, daySel, yearSel].forEach(sel => sel.addEventListener('change', validateModalForm));
+
+// 電話番号とメールアドレスのバリデーション
+const phoneInput = document.getElementById('x-phone');
+const emailInput = document.getElementById('x-email');
+if (phoneInput) {
+  phoneInput.addEventListener('input', validateModalForm);
+}
+if (emailInput) {
+  emailInput.addEventListener('input', validateModalForm);
+}
+
+// パスワードフィールドのバリデーション
+const passwordInputs = document.querySelectorAll('input[type="password"]');
+passwordInputs.forEach(input => {
+  input.addEventListener('input', validateModalForm);
+});
+
+// 入力バリデーション
+function validateModalForm() {
+  const nameOk = nameInput && nameInput.value.length > 0 && nameInput.value.length <= 50;
+  const phoneOk = document.getElementById('x-phone') && document.getElementById('x-phone').value.length > 0;
+  const emailOk = document.getElementById('x-email') && document.getElementById('x-email').value.length > 0;
+  const passwordOk = document.querySelector('input[type="password"]') && document.querySelector('input[type="password"]').value.length > 0;
+  const birthOk = monthSel.value && daySel.value && yearSel.value;
+  
+  // メールアドレスは必須
+  const emailRequired = emailOk;
+  
+  const submitBtn = document.getElementById('x-modal-next');
+  if (submitBtn) {
+    submitBtn.disabled = !(nameOk && emailRequired && passwordOk && birthOk);
+    submitBtn.classList.toggle('active', nameOk && emailRequired && passwordOk && birthOk);
+  }
+}
+
+// フォーム送信時の処理
+// 電話番号とメールアドレスの切り替え
+document.getElementById('use-email-link').addEventListener('click', function(e) {
+  e.preventDefault();
+  document.getElementById('x-phone').parentElement.parentElement.style.display = 'none';
+  document.getElementById('email-field').style.display = 'block';
+  document.getElementById('x-email').required = true;
+  document.getElementById('x-phone').required = false;
+  validateModalForm();
+});
+
+document.getElementById('use-phone-link').addEventListener('click', function(e) {
+  e.preventDefault();
+  document.getElementById('email-field').style.display = 'none';
+  document.getElementById('x-phone').parentElement.parentElement.style.display = 'block';
+  document.getElementById('x-phone').required = true;
+  document.getElementById('x-email').required = false;
+  validateModalForm();
+});
+
+document.getElementById('x-modal-form').addEventListener('submit', function(e) {
+  // 生年月日の値を隠しフィールドに設定
+  document.getElementById('x-birth-month-hidden').value = monthSel.value;
+  document.getElementById('x-birth-day-hidden').value = daySel.value;
+  document.getElementById('x-birth-year-hidden').value = yearSel.value;
+  
+  // バリデーションが通れば送信、通らなければ送信をキャンセル
+  const nameOk = nameInput && nameInput.value.length > 0 && nameInput.value.length <= 50;
+  const emailOk = document.getElementById('x-email') && document.getElementById('x-email').value.length > 0;
+  const passwordOk = document.querySelector('input[type="password"]') && document.querySelector('input[type="password"]').value.length > 0;
+  const birthOk = monthSel.value && daySel.value && yearSel.value;
+  
+  if (!(nameOk && emailOk && passwordOk && birthOk)) {
+    e.preventDefault();
+    alert('すべての項目を入力してください');
+  }
+});
+</script>

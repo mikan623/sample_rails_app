@@ -1,0 +1,287 @@
+<div class="x-container">
+  <div class="x-header">
+    <h1>投稿一覧</h1>
+    <%= link_to '新規投稿', new_post_path, class: 'x-btn x-btn-primary' %>
+  </div>
+
+  <div class="x-posts-container">
+    <% @posts.each do |post| %>
+      <div class="x-post-card">
+        <div class="x-post-header">
+          <div class="x-post-user">
+            <div class="x-user-avatar">
+              <%= post.user.name.first.upcase %>
+            </div>
+            <div class="x-user-info">
+              <div class="x-user-name"><%= post.user.name %></div>
+              <div class="x-post-time"><%= post.created_at.strftime("%Y年%m月%d日 %H:%M") %></div>
+            </div>
+          </div>
+          <% if current_user == post.user %>
+            <div class="x-post-actions">
+              <%= link_to '編集', edit_post_path(post), class: 'x-btn x-btn-small' %>
+              <%= link_to '削除', post_path(post), 
+                  method: :delete, 
+                  data: { confirm: '本当に削除しますか？' }, 
+                  class: 'x-btn x-btn-small x-btn-danger' %>
+            </div>
+          <% end %>
+        </div>
+        
+        <div class="x-post-content">
+          <%= simple_format(post.content) %>
+        </div>
+        
+        <div class="x-post-actions">
+          <% if current_user %>
+            <% if post.liked_by?(current_user) %>
+              <%= button_to post_like_path(post), method: :delete, class: 'x-post-action x-post-action-liked', form: { style: 'display: inline; margin: 0;' } do %>
+                <svg viewBox="0 0 24 24" class="x-post-action-icon">
+                  <path d="M20.884 13.19c-1.351 2.362-5.31 5.304-8.884 5.304-3.574 0-7.533-2.942-8.884-5.304C1.172 10.54 2.224 8.5 4.5 8.5c2.276 0 3.5 2.5 3.5 2.5s1.224-2.5 3.5-2.5c2.276 0 3.328 2.04 2.884 4.69z"/>
+                </svg>
+                <span class="like-count"><%= post.like_count %></span>
+              <% end %>
+            <% else %>
+              <%= button_to post_like_path(post), method: :post, class: 'x-post-action', form: { style: 'display: inline; margin: 0;' } do %>
+                <svg viewBox="0 0 24 24" class="x-post-action-icon">
+                  <path d="M1.751 10c0-4.42 3.584-8 8.005-8h4.366c4.49 0 8.129 3.64 8.129 8.13 0 2.96-1.607 5.68-4.196 7.11l-2.26 1.23c-.51.28-1.1.28-1.61 0l-2.26-1.23C3.507 15.68 1.751 12.96 1.751 10zM8.756 2.5c-3.584 0-6.494 2.91-6.494 6.5 0 2.5 1.494 4.85 3.777 5.86l2.26 1.23c.51.28 1.1.28 1.61 0l2.26-1.23c2.283-1.01 3.777-3.36 3.777-5.86 0-3.59-2.91-6.5-6.494-6.5z"/>
+                </svg>
+                <span class="like-count"><%= post.like_count %></span>
+              <% end %>
+            <% end %>
+          <% else %>
+            <button class="x-post-action" disabled>
+              <svg viewBox="0 0 24 24" class="x-post-action-icon">
+                <path d="M1.751 10c0-4.42 3.584-8 8.005-8h4.366c4.49 0 8.129 3.64 8.129 8.13 0 2.96-1.607 5.68-4.196 7.11l-2.26 1.23c-.51.28-1.1.28-1.61 0l-2.26-1.23C3.507 15.68 1.751 12.96 1.751 10zM8.756 2.5c-3.584 0-6.494 2.91-6.494 6.5 0 2.5 1.494 4.85 3.777 5.86l2.26 1.23c.51.28 1.1.28 1.61 0l2.26-1.23c2.283-1.01 3.777-3.36 3.777-5.86 0-3.59-2.91-6.5-6.494-6.5z"/>
+              </svg>
+              <span class="like-count"><%= post.like_count %></span>
+            </button>
+          <% end %>
+        </div>
+        
+        <div class="x-post-footer">
+          <%= link_to '詳細', post_path(post), class: 'x-link' %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <% if @posts.empty? %>
+    <div class="x-empty-state">
+      <p>まだ投稿がありません</p>
+      <%= link_to '最初の投稿を作成', new_post_path, class: 'x-btn x-btn-primary' %>
+    </div>
+  <% end %>
+  
+  <% if @posts.any? %>
+    <div class="x-pagination">
+      <%= paginate @posts %>
+    </div>
+  <% end %>
+</div>
+
+<style>
+.x-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.x-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e1e8ed;
+}
+
+.x-header h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: bold;
+  color: #0f1419;
+}
+
+.x-btn {
+  padding: 8px 16px;
+  border-radius: 20px;
+  text-decoration: none;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.x-btn-primary {
+  background-color: #1d9bf0;
+  color: white;
+}
+
+.x-btn-primary:hover {
+  background-color: #1a8cd8;
+}
+
+.x-btn-small {
+  padding: 4px 12px;
+  font-size: 12px;
+}
+
+.x-btn-danger {
+  background-color: #e0245e;
+  color: white;
+}
+
+.x-btn-danger:hover {
+  background-color: #c01e4e;
+}
+
+.x-posts-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.x-post-card {
+  background: white;
+  border: 1px solid #e1e8ed;
+  border-radius: 12px;
+  padding: 16px;
+  transition: box-shadow 0.2s;
+}
+
+.x-post-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.x-post-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.x-post-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.x-user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #1d9bf0;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.x-user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.x-user-name {
+  font-weight: bold;
+  color: #0f1419;
+  font-size: 14px;
+}
+
+.x-post-time {
+  color: #536471;
+  font-size: 12px;
+}
+
+.x-post-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.x-post-content {
+  color: #0f1419;
+  line-height: 1.5;
+  margin-bottom: 12px;
+  white-space: pre-wrap;
+}
+
+.x-post-footer {
+  border-top: 1px solid #e1e8ed;
+  padding-top: 12px;
+}
+
+.x-link {
+  color: #1d9bf0;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.x-link:hover {
+  text-decoration: underline;
+}
+
+.x-empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #536471;
+}
+
+.x-empty-state p {
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+
+.x-pagination {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.x-pagination .pagination {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.x-pagination .page {
+  padding: 8px 12px;
+  border: 1px solid #e1e8ed;
+  border-radius: 6px;
+  text-decoration: none;
+  color: #0f1419;
+  transition: all 0.2s;
+}
+
+.x-pagination .page:hover {
+  background-color: #f7f9fa;
+}
+
+.x-pagination .current {
+  background-color: #1d9bf0;
+  color: white;
+  border-color: #1d9bf0;
+}
+
+.x-pagination .prev,
+.x-pagination .next {
+  padding: 8px 12px;
+  border: 1px solid #e1e8ed;
+  border-radius: 6px;
+  text-decoration: none;
+  color: #0f1419;
+  transition: all 0.2s;
+}
+
+.x-pagination .prev:hover,
+.x-pagination .next:hover {
+  background-color: #f7f9fa;
+}
+
+.x-pagination .disabled {
+  color: #536471;
+  cursor: not-allowed;
+}
+</style> 

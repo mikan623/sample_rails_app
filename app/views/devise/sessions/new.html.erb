@@ -1,0 +1,83 @@
+<div class="x-auth-container">
+  <div class="x-auth-left">
+    <img src="/x_logo.png" alt="X logo" class="x-auth-logo" />
+  </div>
+  <div class="x-auth-right">
+    <div class="x-auth-title">すべての話題が、ここに。</div>
+    <div class="x-auth-subtitle">今すぐ参加しましょう。</div>
+    <button class="x-auth-btn-google" type="button">
+      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" style="height:1.5em;margin-right:0.5em;">Google でログイン
+    </button>
+    <button class="x-auth-btn-apple" type="button">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Apple" style="height:1.5em;margin-right:0.5em;">Appleのアカウントでログイン
+    </button>
+    <div class="x-auth-or">または</div>
+    <button class="x-auth-btn-main" type="button" id="open-x-login-modal">ログイン</button>
+    <div class="x-auth-login-link">
+      アカウントをお持ちでない場合<br>
+      <%= link_to 'アカウントを作成', new_user_registration_path %>
+    </div>
+  </div>
+</div>
+
+<!-- ログインモーダル -->
+<div class="x-modal-overlay" id="x-login-modal" style="display:none;">
+  <div class="x-modal-box">
+    <button class="x-modal-close" id="close-x-login-modal" aria-label="閉じる">×</button>
+    <img src="/x_logo.png" alt="X logo" class="x-modal-logo" />
+    <div class="x-modal-title">Xにログイン</div>
+    
+    <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { id: 'x-login-form' }) do |f| %>
+      <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+      <button type="button" class="x-auth-btn-google" style="margin-bottom: 12px;">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" style="height:1.5em;margin-right:0.5em;">Google でログイン
+      </button>
+      <button type="button" class="x-auth-btn-apple" style="margin-bottom: 12px;">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Apple" style="height:1.5em;margin-right:0.5em;">Appleのアカウントでログイン
+      </button>
+      <div class="x-auth-or" style="margin: 16px 0 12px 0;">または</div>
+      
+      <div class="x-modal-form-group">
+        <%= f.text_field :email, 
+                        class: 'x-modal-input',
+                        placeholder: 'メールアドレス',
+                        autofocus: true %>
+      </div>
+      
+      <div class="x-modal-form-group">
+        <%= f.password_field :password, 
+                            class: 'x-modal-input',
+                            placeholder: 'パスワード' %>
+      </div>
+      
+      <div class="form-actions">
+        <%= f.submit "次へ", class: "x-modal-next-btn x-modal-next-btn-black" %>
+      </div>
+    <% end %>
+    
+    <button type="button" class="x-auth-btn-google" style="margin-top: 12px; background: #fff; color: #222; border: 1px solid #ccc;">
+      パスワードを忘れた場合はこちら
+    </button>
+    <div class="x-auth-login-link" style="margin-top: 24px; text-align: center;">
+      アカウントをお持ちでない場合は<br>
+      <a href="#" id="x-login-to-signup">登録</a>
+    </div>
+  </div>
+</div>
+
+<script>
+// ログインモーダル表示/非表示
+const openLoginModalBtn = document.getElementById('open-x-login-modal');
+const closeLoginModalBtn = document.getElementById('close-x-login-modal');
+const loginModal = document.getElementById('x-login-modal');
+openLoginModalBtn.addEventListener('click', () => { loginModal.style.display = 'flex'; });
+closeLoginModalBtn.addEventListener('click', () => { loginModal.style.display = 'none'; });
+window.addEventListener('click', (e) => { if(e.target === loginModal) loginModal.style.display = 'none'; });
+
+// 登録画面への遷移
+document.getElementById('x-login-to-signup').addEventListener('click', function(e) {
+  e.preventDefault();
+  loginModal.style.display = 'none';
+  window.location.href = '/users/sign_up';
+});
+</script>

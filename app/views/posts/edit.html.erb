@@ -1,0 +1,202 @@
+<div class="x-container">
+  <div class="x-header">
+    <h1>投稿を編集</h1>
+    <%= link_to '投稿詳細に戻る', @post, class: 'x-btn x-btn-secondary' %>
+  </div>
+
+  <div class="x-form-container">
+    <%= form_with model: @post, local: true, class: 'x-post-form' do |f| %>
+      <% if @post.errors.any? %>
+        <div class="x-error-messages">
+          <h3><%= pluralize(@post.errors.count, "error") %> prohibited this post from being saved:</h3>
+          <ul>
+            <% @post.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="x-form-group">
+        <%= f.label :content, '投稿内容', class: 'x-form-label' %>
+        <%= f.text_area :content, 
+                        class: 'x-form-textarea',
+                        placeholder: '今何を考えていますか？',
+                        rows: 6,
+                        maxlength: 280 %>
+        <div class="x-char-count">
+          <span id="char-count">0</span>/280
+        </div>
+      </div>
+
+      <div class="x-form-actions">
+        <%= f.submit '更新する', class: 'x-btn x-btn-primary x-btn-large' %>
+        <%= link_to 'キャンセル', @post, class: 'x-btn x-btn-secondary' %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<style>
+.x-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.x-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e1e8ed;
+}
+
+.x-header h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: bold;
+  color: #0f1419;
+}
+
+.x-btn {
+  padding: 8px 16px;
+  border-radius: 20px;
+  text-decoration: none;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: inline-block;
+}
+
+.x-btn-primary {
+  background-color: #1d9bf0;
+  color: white;
+}
+
+.x-btn-primary:hover {
+  background-color: #1a8cd8;
+}
+
+.x-btn-secondary {
+  background-color: #e1e8ed;
+  color: #0f1419;
+}
+
+.x-btn-secondary:hover {
+  background-color: #d1d9de;
+}
+
+.x-btn-large {
+  padding: 12px 24px;
+  font-size: 16px;
+}
+
+.x-form-container {
+  background: white;
+  border: 1px solid #e1e8ed;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.x-post-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.x-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.x-form-label {
+  font-weight: bold;
+  color: #0f1419;
+  font-size: 14px;
+}
+
+.x-form-textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #e1e8ed;
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 120px;
+  transition: border-color 0.2s;
+}
+
+.x-form-textarea:focus {
+  outline: none;
+  border-color: #1d9bf0;
+  box-shadow: 0 0 0 2px rgba(29, 155, 240, 0.2);
+}
+
+.x-char-count {
+  text-align: right;
+  color: #536471;
+  font-size: 12px;
+}
+
+.x-form-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  padding-top: 20px;
+  border-top: 1px solid #e1e8ed;
+}
+
+.x-error-messages {
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.x-error-messages h3 {
+  color: #dc2626;
+  margin: 0 0 12px 0;
+  font-size: 14px;
+}
+
+.x-error-messages ul {
+  margin: 0;
+  padding-left: 20px;
+  color: #dc2626;
+}
+
+.x-error-messages li {
+  margin-bottom: 4px;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const textarea = document.querySelector('.x-form-textarea');
+  const charCount = document.getElementById('char-count');
+  
+  if (textarea && charCount) {
+    function updateCharCount() {
+      const count = textarea.value.length;
+      charCount.textContent = count;
+      
+      if (count > 250) {
+        charCount.style.color = '#e0245e';
+      } else if (count > 200) {
+        charCount.style.color = '#f59e0b';
+      } else {
+        charCount.style.color = '#536471';
+      }
+    }
+    
+    textarea.addEventListener('input', updateCharCount);
+    updateCharCount(); // 初期表示
+  }
+});
+</script> 

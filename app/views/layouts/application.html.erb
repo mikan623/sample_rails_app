@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "Sample Rails App" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
+    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+
+    <%# Includes all stylesheet files in app/assets/stylesheets %>
+    <%= stylesheet_link_tag :app %>
+    
+    <style>
+    .x-nav {
+      background: white;
+      border-bottom: 1px solid #e1e8ed;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    
+    .x-nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 60px;
+    }
+    
+    .x-nav-left, .x-nav-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    
+    .x-nav-link {
+      color: #0f1419;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 8px 12px;
+      border-radius: 20px;
+      transition: background-color 0.2s;
+    }
+    
+    .x-nav-link:hover {
+      background-color: #f7f9fa;
+    }
+    
+    .x-nav-user {
+      color: #536471;
+      font-size: 14px;
+    }
+    </style>
+  </head>
+
+  <body>
+    <% if user_signed_in? %>
+      <nav class="x-nav">
+        <div class="x-nav-container">
+          <div class="x-nav-left">
+            <%= link_to 'ホーム', root_path, class: 'x-nav-link' %>
+            <%= link_to '投稿一覧', posts_path, class: 'x-nav-link' %>
+            <%= link_to '新規投稿', new_post_path, class: 'x-nav-link' %>
+          </div>
+          <div class="x-nav-right">
+            <span class="x-nav-user">こんにちは、<%= current_user.name %>さん</span>
+            <%= link_to 'ログアウト', destroy_user_session_path, method: :delete, class: 'x-nav-link' %>
+          </div>
+        </div>
+      </nav>
+    <% end %>
+    
+    <% if notice %>
+      <div class="notice" style="position: fixed; top: 20px; right: 20px; background: #1d9bf0; color: white; padding: 12px 24px; border-radius: 8px; z-index: 10000; font-weight: 500;"><%= notice %></div>
+    <% end %>
+    <% if alert %>
+      <div class="alert" style="position: fixed; top: 20px; right: 20px; background: #e0245e; color: white; padding: 12px 24px; border-radius: 8px; z-index: 10000; font-weight: 500;"><%= alert %></div>
+    <% end %>
+    <%= yield %>
+  </body>
+</html>
