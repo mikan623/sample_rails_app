@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
   protected
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.permit(:sign_up, keys: [ :name, :phone, :birth_month, :birth_day, :birth_year ])
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:name, :phone, :birth_month, :birth_day, :birth_year])
   end
 
   def after_sign_up_path_for(resource)
