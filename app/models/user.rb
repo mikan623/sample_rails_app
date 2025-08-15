@@ -11,7 +11,7 @@ class User < ApplicationRecord
 
   # 投稿との関連
   has_many :posts, dependent: :destroy
-  
+
   # いいねとの関連
   has_many :likes, dependent: :destroy
   has_many :liked_posts, through: :likes, source: :post
