@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   get "home/index"
   devise_for :users
   resources :posts do
-    resource :like, only: [:create, :destroy]
+    resource :like, only: [ :create, :destroy ]
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
@@ -16,7 +16,7 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   # Defines the root path route ("/")
-  root to: 'home#index'
-  post '/create_post', to: 'home#create_post', as: :create_post
-  get '/timeline', to: 'timeline#index'
+  root to: "home#index"
+  post "/create_post", to: "home#create_post", as: :create_post
+  get "/timeline", to: "timeline#index"
 end

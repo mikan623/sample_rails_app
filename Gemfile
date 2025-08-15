@@ -41,8 +41,8 @@ group :development do
   gem "web-console"
 end
 
-gem 'devise'         # ユーザー認証
-gem 'simple_form'    # フォーム生成
-gem 'dotenv-rails'   # 環境変数管理（開発・テスト用）
-gem 'kaminari'       # ページネーション
-gem 'importmap-rails' # JavaScript管理
+gem "devise"         # ユーザー認証
+gem "simple_form"    # フォーム生成
+gem "dotenv-rails"   # 環境変数管理（開発・テスト用）
+gem "kaminari"       # ページネーション
+gem "importmap-rails" # JavaScript管理
