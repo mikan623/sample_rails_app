@@ -1,5 +1,5 @@
 class HomeController < ApplicationController
-  before_action :authenticate_user!, only: [:create_post]
+  before_action :authenticate_user!, only: [ :create_post ]
 
   def index
     @posts = Post.includes(:user).recent.limit(20)
