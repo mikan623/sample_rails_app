@@ -5,6 +5,14 @@ Rails.application.routes.draw do
   resources :posts do
     resource :like, only: [ :create, :destroy ]
   end
+
+  # API routes
+  namespace :api do
+    resources :posts, only: [:index, :create, :destroy]
+    resources :users, only: [:create]
+    post 'sessions', to: 'sessions#create'
+    get 'users/current', to: 'users#current'
+  end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

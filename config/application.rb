@@ -38,5 +38,8 @@ module SampleRailsApp
 
     # Don't generate system test files.
     config.generators.system_tests = nil
+
+    # API mode configuration - コメントアウトして通常のRailsアプリとして動作
+    # config.api_only = true
   end
 end

@@ -46,3 +46,4 @@ gem "simple_form"    # フォーム生成
 gem "dotenv-rails"   # 環境変数管理（開発・テスト用）
 gem "kaminari"       # ページネーション
 gem "importmap-rails" # JavaScript管理
+gem "rack-cors"      # CORS設定
